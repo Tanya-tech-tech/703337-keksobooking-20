@@ -22,26 +22,23 @@ var similarMarkTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-var loc = 'location';
-var coordX = 'x';
-var coordY = 'y';
-var author = 'author';
-var avatar = 'avatar';
-var offer = 'offer';
-var title = 'title';
-
 var getRandom = function (array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-var getRandomNumberNonRepeating = function (arr) {
-  for (var i = arr.length - 1; i > 0; i--) {
+var shuffle = function (stirringAr) {
+  for (var i = stirringAr.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var temp = arr[j];
-    arr[j] = arr[i];
-    arr[i] = temp;
+    var temp = stirringAr[j];
+    stirringAr[j] = stirringAr[i];
+    stirringAr[i] = temp;
   }
-  for (i = arr.length - 1; i >= 0; i--) {
+  return stirringAr;
+};
+
+var getRandomNumberNonRepeating = function (arr) {
+  shuffle(arr);
+  for (var i = arr.length - 1; i >= 0; i--) {
     arr[i] = '0' + arr[i];
   }
   return arr;
@@ -83,50 +80,55 @@ var getArrayRandomFeatures = function (arru) {
   return massive;
 };
 
+var createPin = function () {
+  var mark = {
+    'author': {
+      avatar: getRandomImg()},
+    'offer': {
+      'title': 'строка, заголовок предложения',
+      'address': '600, 350',
+      'price': PRICE_PER_DAY,
+      'type': getRandom(TYPE),
+      'rooms': QUANTITY_ROOMS,
+      'guests': QUANTITY_GUESTS,
+      'checkin': getRandom(CHECKIN),
+      'checkout': getRandom(CHECKOUT),
+      'features': getArrayRandomFeatures(FACILITIES),
+      'description': 'ПРЕКРАСНО',
+      'photos': getArrayRandomFeatures(PHOTOS)
+    },
+    'loc': {
+      x: getSizeMarkX(50),
+      y: getSizeMarkY(70)
+    }
+  };
+  return mark;
+};
+
 var getAllAds = function () {
   var ads = [];
   for (var i = 0; i < 8; i++) {
-    var oneObj = {
-      'author': {
-        'avatar': getRandomImg()},
-      'offer': {
-        'title': 'строка, заголовок предложения',
-        'address': '600, 350',
-        'price': PRICE_PER_DAY,
-        'type': getRandom(TYPE),
-        'rooms': QUANTITY_ROOMS,
-        'guests': QUANTITY_GUESTS,
-        'checkin': getRandom(CHECKIN),
-        'checkout': getRandom(CHECKOUT),
-        'features': getArrayRandomFeatures(FACILITIES),
-        'description': 'ПРЕКРАСНО',
-        'photos': getArrayRandomFeatures(PHOTOS)
-      },
-      'location': {
-        'x': getSizeMarkX(50),
-        'y': getSizeMarkY(70)
-      }
-    };
-    ads.push(oneObj);
+    ads.push(createPin());
   }
   return ads;
 };
 
-var ads = getAllAds();
 
-var renderMarks = function (arrrr) {
+var renderMarks = function (mark) {
   var adEl = similarMarkTemplate.cloneNode(true);
-  adEl.style.left = arrrr[loc][coordX];
-  adEl.style.top = arrrr[loc][coordY];
-  adEl.querySelector('img').src = arrrr[author][avatar];
-  adEl.querySelector('img').alt = arrrr[offer][title];
+  adEl.style.left = mark.loc.x;
+  adEl.style.top = mark.loc.y;
+  adEl.querySelector('img').src = mark.author.avatar;
+  adEl.querySelector('img').alt = mark.offer.title;
   return adEl;
 };
 
+var pinsArray = getAllAds();
+
 var renderAllMarks = function () {
   var fragment = document.createDocumentFragment();
-  for (var s = 0; s < ads.length; s++) {
-    fragment.appendChild(renderMarks(ads[s]));
+  for (var s = 0; s < pinsArray.length; s++) {
+    fragment.appendChild(renderMarks(pinsArray[s]));
   }
   return fragment;
 };
