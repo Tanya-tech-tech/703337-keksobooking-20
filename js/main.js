@@ -4,71 +4,65 @@ var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var FACILITIES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var NUMBER_PHOTO = [1, 2, 3, 4, 5, 6, 7, 8];
+var BORDER_X = 130;
+var BORDER_Y = 630;
+var QUANTITY_ROOMS = 4;
+var PRICE_PER_DAY = 6000;
+var QUANTITY_GUESTS = 10;
 
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
+var similarListElement = document.querySelector('.map__pins');
+var randomWidth = similarListElement.offsetWidth;
 
-var similarAdsTemplate = document.querySelector('#card')
+var similarMarkTemplate = document.querySelector('#pin')
     .content
-    .querySelector('.popup');
+    .querySelector('.map__pin');
 
-
-var NUMBER_PHOTO = [1, 2, 3, 4, 5, 6, 7, 8];
+var loc = 'location';
+var coordX = 'x';
+var coordY = 'y';
+var author = 'author';
+var avatar = 'avatar';
+var offer = 'offer';
+var title = 'title';
 
 var getRandom = function (array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-var getRandomNumber = function () {
-  return '0' + NUMBER_PHOTO[Math.floor(Math.random() * NUMBER_PHOTO.length)]
-}
-
-var result = [];
-
-//отличные случайные числа без повторений
-var getRandomResult = function () {
-  while (result.length <NUMBER_PHOTO.length) {
-    var randomNumber = getRandomNumber();
-    if (result.indexOf(randomNumber) < 0) {
-      result[result.length] = randomNumber;
-    }
+var getRandomNumberNonRepeating = function (arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = arr[j];
+    arr[j] = arr[i];
+    arr[i] = temp;
   }
-  return result;
+  for (i = arr.length - 1; i >= 0; i--) {
+    arr[i] = '0' + arr[i];
+  }
+  return arr;
 };
 
-getRandomResult();
+var finalNumberPhoto = getRandomNumberNonRepeating(NUMBER_PHOTO);
 
-var indexRandom;
-var valueRandom;
-
-var getRandomNumberNonRepeating = function (arr) {
-
-    var j= Math.floor(Math.random() * arr.length)
-    indexRandom = j;
-    valueRandom = arr[j];
-    var removed = arr.splice(j, 1);
-    return valueRandom;
+var getPhotoNumber = function (arry) {
+  var j = Math.floor(Math.random() * arry.length);
+  var v = arry[j];
+  arry.splice(j, 1);
+  return v;
 };
 
 var getRandomImg = function () {
-  return 'img/avatars/user' + getRandomNumberNonRepeating(result) + '.png';
+  return 'img/avatars/user' + getPhotoNumber(finalNumberPhoto) + '.png';
 };
-
-var size = document.querySelector('.map__pins');
-//alert(size.offsetWidth +"x"+ size.offsetHeight);
-var randomWidth = size.offsetWidth;
-var randomHeight = size.offsetHeight;
 
 var getRandomСoordinate = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
-
-var sizeMark = document.querySelector('.map__pin');
-//alert(sizeMark.offsetWidth +"x"+ size.offsetHeight);
-//sizeMark.style.border = '5px solid';
 
 var getSizeMarkX = function (wid) {
   var k = (wid / 2);
@@ -77,73 +71,57 @@ var getSizeMarkX = function (wid) {
 
 var getSizeMarkY = function (hei) {
   var g = hei;
-  return getRandomСoordinate(borderX, borderY) - g + 'px';
+  return getRandomСoordinate(BORDER_X, BORDER_Y) - g + 'px';
 };
 
-var quantityRooms = 4;
-var pricePerDay = 6000;
-var quantityGuests = 10;
-
-var borderX = 130;
-var borderY = 630;
-/*
-var loc = 'location';
-var coordX = 'x';
-var coordY = 'y';*/
-
-var ads = [];
+var getArrayRandomFeatures = function (arru) {
+  var massive = [];
+  massive.length = Math.floor(Math.random() * arru.length + 1);
+  for (var i = 0; i < massive.length; i++) {
+    massive[i] = arru[i];
+  }
+  return massive;
+};
 
 var getAllAds = function () {
-  var obj3 = new Object();
-  obj3.avatar = getRandomImg();
-
-  var obj4 = new Object();
-  obj4.title = 'строка, заголовок предложения';
-  obj4.address = '600, 350';
-  obj4.price = pricePerDay;
-  obj4.type = getRandom(TYPE);
-  obj4.rooms = quantityRooms;
-  obj4.guests = quantityGuests;
-  obj4.checkin = getRandom(CHECKIN);
-  obj4.checkout = getRandom(CHECKOUT);
-  obj4.features = getRandom(FACILITIES); //массив строк случайной длины из ниже предложенных: "wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"
-  obj4.description = 'ПРЕКРАСНО';
-  obj4.photos = PHOTOS;//массив строк случайной длины, содержащий адреса фотографий
-
-  var obj5 = new Object();
-  obj5.coorX =  getSizeMarkX(50);
-  obj5.coorY =  getSizeMarkY(70);
-
-
-  var obj2 = new Object();
-  obj2.author = obj3;
-  obj2.offer = obj4;
-  obj2.location = obj5;
-
+  var ads = [];
   for (var i = 0; i < 8; i++) {
-    ads.push(obj2);
+    var oneObj = {
+      'author': {
+        'avatar': getRandomImg()},
+      'offer': {
+        'title': 'строка, заголовок предложения',
+        'address': '600, 350',
+        'price': PRICE_PER_DAY,
+        'type': getRandom(TYPE),
+        'rooms': QUANTITY_ROOMS,
+        'guests': QUANTITY_GUESTS,
+        'checkin': getRandom(CHECKIN),
+        'checkout': getRandom(CHECKOUT),
+        'features': getArrayRandomFeatures(FACILITIES),
+        'description': 'ПРЕКРАСНО',
+        'photos': getArrayRandomFeatures(PHOTOS)
+      },
+      'location': {
+        'x': getSizeMarkX(50),
+        'y': getSizeMarkY(70)
+      }
+    };
+    ads.push(oneObj);
   }
   return ads;
 };
 
-getAllAds();
-
-var similarMarkTemplate = document.querySelector('#pin')
-    .content
-    .querySelector('.map__pin');
-
-var similarListElement = document.querySelector('.map__pins');
-
+var ads = getAllAds();
 
 var renderMarks = function (arrrr) {
   var adEl = similarMarkTemplate.cloneNode(true);
-  adEl.style.left = arrrr.location.coorX;
-  adEl.style.top = arrrr.location.coorY;
-  adEl.querySelector('img').src = arrrr.author.avatar;
-  adEl.querySelector('img').alt = arrrr.offer.title;
+  adEl.style.left = arrrr[loc][coordX];
+  adEl.style.top = arrrr[loc][coordY];
+  adEl.querySelector('img').src = arrrr[author][avatar];
+  adEl.querySelector('img').alt = arrrr[offer][title];
   return adEl;
 };
-
 
 var renderAllMarks = function () {
   var fragment = document.createDocumentFragment();
