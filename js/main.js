@@ -97,9 +97,9 @@ var createPin = function () {
       'description': 'ПРЕКРАСНО',
       'photos': getArrayRandomFeatures(PHOTOS)
     },
-    'loc': {
-      x: getSizeMarkX(50),
-      y: getSizeMarkY(70)
+    'location': {
+      'x': getSizeMarkX(50),
+      'y': getSizeMarkY(70)
     }
   };
   return mark;
@@ -113,11 +113,10 @@ var getAllAds = function () {
   return ads;
 };
 
-
 var renderMarks = function (mark) {
   var adEl = similarMarkTemplate.cloneNode(true);
-  adEl.style.left = mark.loc.x;
-  adEl.style.top = mark.loc.y;
+  adEl.style.left = mark.location.x;
+  adEl.style.top = mark.location.y;
   adEl.querySelector('img').src = mark.author.avatar;
   adEl.querySelector('img').alt = mark.offer.title;
   return adEl;
