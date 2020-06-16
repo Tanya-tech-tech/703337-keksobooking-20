@@ -83,7 +83,7 @@ var getArrayRandomFeatures = function (arru) {
 var createPin = function () {
   var mark = {
     'author': {
-      avatar: getRandomImg()},
+      'avatar': getRandomImg()},
     'offer': {
       'title': 'строка, заголовок предложения',
       'address': '600, 350',
