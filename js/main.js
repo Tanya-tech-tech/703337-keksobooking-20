@@ -14,22 +14,15 @@ var QUANTITY_GUESTS = 10;
 
 var similarListElement = document.querySelector('.map__pins');
 var setupActiveMap = similarListElement.querySelector('.map__pin--main');
-
 var randomWidth = similarListElement.offsetWidth;
-
-var setupForm = document.querySelector('.ad-form');
-
-var setupAddress = setupForm.querySelector('#address');
-var setupRoomNumber = setupForm.querySelector('#room_number');
-var setupCapacity = setupForm.querySelector('#capacity');
-
+var form = document.querySelector('.ad-form');
+var setupAddress = form.querySelector('#address');
+var setupRoomNumber = form.querySelector('#room_number');
+var setupCapacity = form.querySelector('#capacity');
 var map = document.querySelector('.map');
-
-var controlsForm = setupForm.querySelectorAll('input, select, textarea');
-
+var controlsForm = form.querySelectorAll('input, select, textarea');
 var optionsRoomQuantity = setupRoomNumber.querySelectorAll('option');
 var optionsCapacity = setupCapacity.querySelectorAll('option');
-
 var pinMainWidth = setupActiveMap.offsetWidth;
 var pinMainHeightNotActive = setupActiveMap.offsetHeight;
 var pinMainHeightActive = setupActiveMap.offsetHeight + 22;// 22 - размер псевдоэлемента after
@@ -42,30 +35,30 @@ var getRandom = function (array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-var shuffle = function (stirringAr) {
-  for (var i = stirringAr.length - 1; i > 0; i--) {
+var shuffle = function (sourceArray) {
+  for (var i = sourceArray.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var temp = stirringAr[j];
-    stirringAr[j] = stirringAr[i];
-    stirringAr[i] = temp;
+    var temp = sourceArray[j];
+    sourceArray[j] = sourceArray[i];
+    sourceArray[i] = temp;
   }
-  return stirringAr;
+  return sourceArray;
 };
 
-var getRandomNumberNonRepeating = function (arr) {
-  shuffle(arr);
-  for (var i = arr.length - 1; i >= 0; i--) {
-    arr[i] = '0' + arr[i];
+var getRandomNumberNonRepeating = function (array) {
+  var innerArray = shuffle(array);
+  for (var i = innerArray.length - 1; i >= 0; i--) {
+    innerArray[i] = '0' + innerArray[i];
   }
-  return arr;
+  return innerArray;
 };
 
 var finalNumberPhoto = getRandomNumberNonRepeating(NUMBER_PHOTO);
 
-var getPhotoNumber = function (arry) {
-  var j = Math.floor(Math.random() * arry.length);
-  var v = arry[j];
-  arry.splice(j, 1);
+var getPhotoNumber = function (array) {
+  var j = Math.floor(Math.random() * array.length);
+  var v = array[j];
+  array.splice(j, 1);
   return v;
 };
 
@@ -73,25 +66,25 @@ var getRandomImg = function () {
   return 'img/avatars/user' + getPhotoNumber(finalNumberPhoto) + '.png';
 };
 
-var getRandomСoordinate = function (min, max) {
+var getRandomCoordinate = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
-var getSizeMarkX = function (wid) {
-  var k = (wid / 2);
-  return getRandomСoordinate(0, randomWidth) - k + 'px';
+var getSizeMarkX = function (width) {
+  var k = (width / 2);
+  return getRandomCoordinate(0, randomWidth) - k + 'px';
 };
 
-var getSizeMarkY = function (hei) {
-  var g = hei;
-  return getRandomСoordinate(BORDER_X, BORDER_Y) - g + 'px';
+var getSizeMarkY = function (height) {
+  var g = height;
+  return getRandomCoordinate(BORDER_X, BORDER_Y) - g + 'px';
 };
 
-var getArrayRandomFeatures = function (arru) {
+var getArrayRandomFeatures = function (array) {
   var massive = [];
-  massive.length = Math.floor(Math.random() * arru.length + 1);
+  massive.length = Math.floor(Math.random() * array.length + 1);
   for (var i = 0; i < massive.length; i++) {
-    massive[i] = arru[i];
+    massive[i] = array[i];
   }
   return massive;
 };
@@ -122,11 +115,11 @@ var createPin = function () {
 };
 
 var getAllAds = function () {
-  var ads = [];
+  var offer = [];
   for (var i = 0; i < 8; i++) {
-    ads.push(createPin());
+    offer.push(createPin());
   }
-  return ads;
+  return offer;
 };
 
 var renderMarks = function (mark) {
@@ -138,41 +131,49 @@ var renderMarks = function (mark) {
   return adEl;
 };
 
-for (var i = 0; i < optionsRoomQuantity.length; i++) {
-  if (optionsRoomQuantity[i].value === '1') {
-    for (var e = 0; e < optionsCapacity.length; e++) {
-      if (optionsCapacity[e].value === optionsRoomQuantity[i].value) {
-        optionsCapacity[e].selected = optionsRoomQuantity[i].selected;
-      } else {
-        optionsCapacity[e].disabled = true;
-      }
+var checkCapacity = function (roomValue, roomQuantity) {
+  for (var j = 0; j < optionsCapacity.length; j++) {
+    if (optionsCapacity[j].value === roomValue) {
+      optionsCapacity[j].selected = roomQuantity;
+    } else {
+      optionsCapacity[j].disabled = true;
     }
   }
-}
-
-var setPinMainInitialСoordinate = function (width, height) {
-  setupActiveMap.style.left = Math.round(parseInt(setupActiveMap.style.left, 10) - width / 2) + 'px';
-  setupActiveMap.style.top = Math.round(parseInt(setupActiveMap.style.top, 10) - height / 2) + 'px';
 };
 
-setPinMainInitialСoordinate(pinMainWidth, pinMainHeightNotActive);
+var roomsForGuests = function () {
+  for (var i = 0; i < optionsRoomQuantity.length; i++) {
+    if (optionsRoomQuantity[i].value === '1') {
+      checkCapacity(optionsRoomQuantity[i].value, optionsRoomQuantity[i].selected);
+    }
+  }
+};
 
-var getPinMainСoordinate = function () {
+roomsForGuests();
+var setPinMainInitialCoordinate = function (width, height) {
+  var style = setupActiveMap.style;
+  style.left = Math.round(parseInt(setupActiveMap.style.left, 10) - width / 2) + 'px';
+  style.top = Math.round(parseInt(setupActiveMap.style.top, 10) - height / 2) + 'px';
+};
+
+setPinMainInitialCoordinate(pinMainWidth, pinMainHeightNotActive);
+
+var getPinMainCoordinate = function () {
   return parseInt(setupActiveMap.style.left, 10) + ', '
   + parseInt(setupActiveMap.style.top, 10);
 };
 
-setupAddress.value = getPinMainСoordinate();
+setupAddress.value = getPinMainCoordinate();
 
 var disableItem = function (controls) {
-  for (var l = 0; l < controls.length; l++) {
-    controls[l].disabled = true;
+  for (var i = 0; i < controls.length; i++) {
+    controls[i].disabled = true;
   }
 };
 
-var turningOnItem = function (controls) {
-  for (var h = 0; h < controls.length; h++) {
-    controls[h].disabled = false;
+var anableItem = function (controls) {
+  for (var i = 0; i < controls.length; i++) {
+    controls[i].disabled = false;
   }
 };
 
@@ -193,47 +194,24 @@ var activeMap = function () {
 var openMap = function () {
   map.classList.remove('map--faded');
   activeMap();
-  turningOnItem(controlsForm);
+  anableItem(controlsForm);
   setupActiveMap.style.left = Math.round(parseInt(setupActiveMap.style.left, 10)) + 'px';
   setupActiveMap.style.top = Math.round(parseInt(setupActiveMap.style.top, 10) + pinMainHeightNotActive / 2
                             - pinMainHeightActive) + 'px';
-  setupAddress.value = getPinMainСoordinate();
+  setupAddress.value = getPinMainCoordinate();
 
   setupRoomNumber.addEventListener('change', function () {
-    var option1 = setupCapacity.querySelector('option:nth-child(1)');
-    var option2 = setupCapacity.querySelector('option:nth-child(2)');
-    var option3 = setupCapacity.querySelector('option:nth-child(3)');
-    var option4 = setupCapacity.querySelector('option:nth-child(4)');
-    if (setupRoomNumber.value === '100') {
-      option1.disabled = true;
-      option1.selected = false;
-      option2.disabled = true;
-      option2.selected = false;
-      option3.disabled = true;
-      option3.selected = false;
-      option4.disabled = false;
-    } else if (setupRoomNumber.value === '1') {
-      option1.disabled = true;
-      option1.selected = false;
-      option2.disabled = true;
-      option2.selected = false;
-      option3.disabled = false;
-      option4.disabled = true;
-      option4.selected = false;
-    } else if (setupRoomNumber.value === '2') {
-      option1.disabled = true;
-      option1.selected = false;
-      option2.disabled = false;
+    for (var j = 0; j < optionsCapacity.length; j++) {
+      if (parseInt(setupRoomNumber.value, 10) >= parseInt(optionsCapacity[j].value, 10) && parseInt(setupRoomNumber.value, 10) < 100
+        && optionsCapacity[j].value !== '0') {
+        optionsCapacity[j].disabled = false;
 
-      option3.disabled = false;
-
-      option4.disabled = true;
-      option4.selected = false;
-    } else if (setupRoomNumber.value === '3') {
-      option1.disabled = false;
-      option2.disabled = false;
-      option3.disabled = false;
-      option4.disabled = true;
+      } else if (setupRoomNumber.value === '100' && optionsCapacity[j].value === '0') {
+        optionsCapacity[j].disabled = false;
+      } else {
+        optionsCapacity[j].disabled = true;
+        optionsCapacity[j].selected = false;
+      }
     }
   });
 };
