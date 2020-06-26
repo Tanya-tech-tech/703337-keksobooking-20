@@ -200,9 +200,12 @@ var openMap = function () {
                             - pinMainHeightActive) + 'px';
   setupAddress.value = getPinMainCoordinate();
 
+  setupActiveMap.removeEventListener('mousedown', activationMap);
+
   setupRoomNumber.addEventListener('change', function () {
     for (var j = 0; j < optionsCapacity.length; j++) {
-      if (parseInt(setupRoomNumber.value, 10) >= parseInt(optionsCapacity[j].value, 10) && parseInt(setupRoomNumber.value, 10) < 100
+      if (parseInt(setupRoomNumber.value, 10) >= parseInt(optionsCapacity[j].value, 10)
+        && parseInt(setupRoomNumber.value, 10) < 100
         && optionsCapacity[j].value !== '0') {
         optionsCapacity[j].disabled = false;
 
@@ -216,11 +219,13 @@ var openMap = function () {
   });
 };
 
-setupActiveMap.addEventListener('mousedown', function (evt) {
+var activationMap = function (evt) {
   if (evt.button === 0) {
     openMap();
   }
-});
+};
+
+setupActiveMap.addEventListener('mousedown', activationMap);
 
 setupActiveMap.addEventListener('keydown', function (evt) {
   if (evt.key === 'Enter') {
