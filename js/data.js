@@ -6,11 +6,11 @@
   var FACILITIES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
   var NUMBER_PHOTO = [1, 2, 3, 4, 5, 6, 7, 8];
-  var BORDER_X = 130;
-  var BORDER_Y = 630;
+
   var QUANTITY_ROOMS = 4;
   var PRICE_PER_DAY = 6000;
   var QUANTITY_GUESTS = 10;
+  var MAX_SIMILAR_PIN = 8;
 
   var similarListElement = document.querySelector('.map__pins');
   var setupActiveMap = similarListElement.querySelector('.map__pin--main');
@@ -38,8 +38,6 @@
     FACILITIES: FACILITIES,
     PHOTOS: PHOTOS,
     NUMBER_PHOTO: NUMBER_PHOTO,
-    BORDER_X: BORDER_X,
-    BORDER_Y: BORDER_Y,
     QUANTITY_ROOMS: QUANTITY_ROOMS,
     PRICE_PER_DAY: PRICE_PER_DAY,
     QUANTITY_GUESTS: QUANTITY_GUESTS,
@@ -64,18 +62,61 @@
         window.form.openMap();
       }
     },
+
     evtEnter: function (evt) {
       if (evt.key === 'Enter') {
         window.form.openMap();
       }
     },
+
     anableItem: function (controls) {
       for (var i = 0; i < controls.length; i++) {
         controls[i].disabled = false;
       }
+    },
+    successHandler: function (pins) {
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
+        fragment.appendChild(window.map.renderMarks(pins[i]));
+      }
+      window.data.similarListElement.appendChild(fragment);
+    },
+    errorHandler: function (errorMessage) {
+      var node = document.createElement('div');
+      node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: white; color: red';
+      node.style.position = 'absolute';
+      node.style.left = 0;
+      node.style.right = 0;
+      node.style.paddingTop = '50px';
+      node.style.fontSize = '40px';
+      node.style.height = '150px';
+      node.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterbegin', node);
     }
   };
 
 })();
 
 
+
+/*
+  var successHandler = function (pins) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
+      fragment.appendChild(window.map.renderMarks(pins[i]));
+    }
+    window.data.similarListElement.appendChild(fragment);
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: white; color: red';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.paddingTop = '50px';
+    node.style.fontSize = '40px';
+    node.style.height = '150px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };*/
