@@ -98,25 +98,3 @@
 })();
 
 
-
-/*
-  var successHandler = function (pins) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
-      fragment.appendChild(window.map.renderMarks(pins[i]));
-    }
-    window.data.similarListElement.appendChild(fragment);
-  };
-
-  var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: white; color: red';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.paddingTop = '50px';
-    node.style.fontSize = '40px';
-    node.style.height = '150px';
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };*/

@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  //var map = ;
 
   var checkCapacity = function (roomValue, roomQuantity) {
     for (var j = 0; j < window.data.optionsCapacity.length; j++) {
@@ -29,8 +28,7 @@
     style.top = Math.round(parseInt(style.top, 10) - height / 2) + 'px';
   };
 
-  setPinMainInitialCoordinate(window.data.pinMainWidth,
-                              window.data.pinMainHeightNotActive);
+  setPinMainInitialCoordinate(window.data.pinMainWidth, window.data.pinMainHeightNotActive);
 
   var disableItem = function (controls) {
     for (var i = 0; i < controls.length; i++) {

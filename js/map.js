@@ -32,7 +32,7 @@
 
   var renderMarks = function (mark) {
     var adEl = window.data.similarMarkTemplate.cloneNode(true);
-    adEl.style.left = mark.location[x];
+    adEl.style.left = mark.location.x;
     adEl.style.top = mark.location.y;
     adEl.querySelector('img').src = mark.author.avatar;
     adEl.querySelector('img').alt = mark.offer.title;
@@ -66,13 +66,13 @@
     },
 
     renderMarks: function (mark) {
-    var adEl = window.data.similarMarkTemplate.cloneNode(true);
-    adEl.style.left = mark.location.x + 'px';
-    adEl.style.top = mark.location.y + 'px';
-    adEl.querySelector('img').src = mark.author.avatar;
-    adEl.querySelector('img').alt = mark.offer.title;
-    return adEl;
-  },
+      var adEl = window.data.similarMarkTemplate.cloneNode(true);
+      adEl.style.left = mark.location.x + 'px';
+      adEl.style.top = mark.location.y + 'px';
+      adEl.querySelector('img').src = mark.author.avatar;
+      adEl.querySelector('img').alt = mark.offer.title;
+      return adEl;
+    },
 
     getRandomImg: function () {
       return 'img/avatars/user' + getPhotoNumber(finalNumberPhoto) + '.png';
