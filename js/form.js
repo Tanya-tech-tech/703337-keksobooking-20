@@ -1,14 +1,16 @@
 'use strict';
 
 (function () {
+  var style = window.data.setupActiveMap.style;
 
   window.form = {
     openMap: function () {
       window.data.map.classList.remove('map--faded');
-      window.map.renderPins();
+
+      window.load(window.data.successHandler, window.data.errorHandler);
       window.data.anableItem(window.data.controlsForm);
-      window.data.setupActiveMap.style.left = Math.round(parseInt(window.data.setupActiveMap.style.left, 10)) + 'px';
-      window.data.setupActiveMap.style.top = Math.round(parseInt(window.data.setupActiveMap.style.top, 10) + window.data.pinMainHeightNotActive / 2
+      style.left = Math.round(parseInt(style.left, 10)) + 'px';
+      style.top = Math.round(parseInt(style.top, 10) + window.data.pinMainHeightNotActive / 2
                             - window.data.pinMainHeightActive) + 'px';
       window.data.setupAddress.value = window.map.getPinMainCoordinate();
 

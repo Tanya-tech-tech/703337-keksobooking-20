@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var BORDER_X = 130;
+  var BORDER_Y = 630;
 
   var shuffle = function (sourceArray) {
     for (var i = sourceArray.length - 1; i > 0; i--) {
@@ -63,6 +65,15 @@
       window.data.similarListElement.appendChild(renderAllMarks());
     },
 
+    renderMarks: function (mark) {
+      var adEl = window.data.similarMarkTemplate.cloneNode(true);
+      adEl.style.left = mark.location.x + 'px';
+      adEl.style.top = mark.location.y + 'px';
+      adEl.querySelector('img').src = mark.author.avatar;
+      adEl.querySelector('img').alt = mark.offer.title;
+      return adEl;
+    },
+
     getRandomImg: function () {
       return 'img/avatars/user' + getPhotoNumber(finalNumberPhoto) + '.png';
     },
@@ -95,11 +106,12 @@
 
     getSizeMarkY: function (height) {
       var g = height;
-      return getRandomCoordinate(window.data.BORDER_X, window.data.BORDER_Y) - g + 'px';
+      return getRandomCoordinate(BORDER_X, BORDER_Y) - g + 'px';
     },
     getPinMainCoordinate: function () {
-      return parseInt(window.data.setupActiveMap.style.left, 10) + ', '
-      + parseInt(window.data.setupActiveMap.style.top, 10);
+      var style = window.data.setupActiveMap.style;
+      return parseInt(style.left, 10) + ', '
+      + parseInt(style.top, 10);
     }
   };
 

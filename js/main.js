@@ -24,8 +24,8 @@
 
   var setPinMainInitialCoordinate = function (width, height) {
     var style = window.data.setupActiveMap.style;
-    style.left = Math.round(parseInt(window.data.setupActiveMap.style.left, 10) - width / 2) + 'px';
-    style.top = Math.round(parseInt(window.data.setupActiveMap.style.top, 10) - height / 2) + 'px';
+    style.left = Math.round(parseInt(style.left, 10) - width / 2) + 'px';
+    style.top = Math.round(parseInt(style.top, 10) - height / 2) + 'px';
   };
 
   setPinMainInitialCoordinate(window.data.pinMainWidth, window.data.pinMainHeightNotActive);
