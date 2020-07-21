@@ -36,7 +36,14 @@
     }
   };
 
+  var disableMapFilters = function (filters) {
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].disabled = true;
+    }
+  };
+  window.data.mapFiltersContainer.insertAdjacentElement('beforeBegin', window.card.renderCards());
   disableItem(window.data.controlsForm);
+  disableMapFilters(window.data.filters);
 
   window.data.setupActiveMap.addEventListener('mousedown', window.data.activationMap);
 

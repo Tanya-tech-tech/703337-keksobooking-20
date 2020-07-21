@@ -6,9 +6,10 @@
   window.form = {
     openMap: function () {
       window.data.map.classList.remove('map--faded');
-
       window.load(window.data.successHandler, window.data.errorHandler);
+
       window.data.anableItem(window.data.controlsForm);
+      window.data.anableMapFilters(window.data.filters);
       style.left = Math.round(parseInt(style.left, 10)) + 'px';
       style.top = Math.round(parseInt(style.top, 10) + window.data.pinMainHeightNotActive / 2
                             - window.data.pinMainHeightActive) + 'px';
