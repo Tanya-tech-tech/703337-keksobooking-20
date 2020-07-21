@@ -67,6 +67,7 @@
 
     renderMarks: function (mark) {
       var adEl = window.data.similarMarkTemplate.cloneNode(true);
+      adEl.classList.add('usual');
       adEl.style.left = mark.location.x + 'px';
       adEl.style.top = mark.location.y + 'px';
       adEl.querySelector('img').src = mark.author.avatar;
