@@ -103,12 +103,11 @@
           return it.offer.type === window.data.housingType.value;
         });
         var takeNumber = sameTypeHouse.length > MAX_SIMILAR_PIN ? MAX_SIMILAR_PIN : sameTypeHouse.length;
-        //window.data.similarListElement.innerHTML = '';
+        // window.data.similarListElement.innerHTML = '';
 
         if (window.data.housingType.value === 'any') {
           for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
             fragment.appendChild(window.map.renderMarks(pins[i]));
-            console.log(mapPin);
           }
         } else {
           for (var j = 0; j < takeNumber; j++) {
@@ -119,13 +118,12 @@
       };
       var hideCard = function () {
         var hiddenCards = document.querySelector('.containerCard');
-        console.log(mapPin);
+
         for (var s = 0; s < mapPin.length; s++) {
           if (mapPin[s].className === 'map__pin usual') {
             mapPin[s].classList.add('hidden');
           }
         }
-        //mapPin.classList.add('hidden');
         hiddenCards.classList.add('hidden');
         successSameTypeHandler();
       };
