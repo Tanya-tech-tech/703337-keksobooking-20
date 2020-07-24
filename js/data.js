@@ -10,7 +10,7 @@
   var QUANTITY_ROOMS = 4;
   var PRICE_PER_DAY = 6000;
   var QUANTITY_GUESTS = 10;
-  var MAX_SIMILAR_PIN = 8;
+  var MAX_SIMILAR_PIN = 5;
 
   var similarListElement = document.querySelector('.map__pins');
   var setupActiveMap = similarListElement.querySelector('.map__pin--main');
@@ -21,15 +21,24 @@
   var setupCapacity = form.querySelector('#capacity');
   var map = document.querySelector('.map');
   var controlsForm = form.querySelectorAll('input, select, textarea');
+  var filters = document.querySelector('.map__filters').querySelectorAll('input, select, textarea');
   var optionsRoomQuantity = setupRoomNumber.querySelectorAll('option');
   var optionsCapacity = setupCapacity.querySelectorAll('option');
   var pinMainWidth = setupActiveMap.offsetWidth;
   var pinMainHeightNotActive = setupActiveMap.offsetHeight;
   var pinMainHeightActive = setupActiveMap.offsetHeight + 22;// 22 - размер псевдоэлемента after
+  var mapFilters = document.querySelector('.map__filters-container');
+  var housingType = document.getElementById('housing-type');
+  var mapPin = similarListElement.children;
+
 
   var similarMarkTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
+  var similarCardTemplate = document.querySelector('#card')
+    .content
+    .querySelector('.popup');
+  var mapFiltersContainer = document.querySelector('.map__filters-container');
 
   window.data = {
     CHECKIN: CHECKIN,
@@ -51,12 +60,18 @@
     setupCapacity: setupCapacity,
     map: map,
     controlsForm: controlsForm,
+    filters: filters,
     optionsRoomQuantity: optionsRoomQuantity,
     optionsCapacity: optionsCapacity,
     pinMainWidth: pinMainWidth,
     pinMainHeightNotActive: pinMainHeightNotActive,
     pinMainHeightActive: pinMainHeightActive,
+    mapFilters: mapFilters,
     similarMarkTemplate: similarMarkTemplate,
+    similarCardTemplate: similarCardTemplate,
+    mapFiltersContainer: mapFiltersContainer,
+    housingType: housingType,
+
     activationMap: function (evt) {
       if (evt.button === 0) {
         window.form.openMap();
@@ -74,13 +89,48 @@
         controls[i].disabled = false;
       }
     },
+
+    anableMapFilters: function (filter) {
+      for (var i = 0; i < filter.length; i++) {
+        filter[i].disabled = false;
+      }
+    },
+
     successHandler: function (pins) {
       var fragment = document.createDocumentFragment();
-      for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
-        fragment.appendChild(window.map.renderMarks(pins[i]));
-      }
-      window.data.similarListElement.appendChild(fragment);
+      var successSameTypeHandler = function () {
+        var sameTypeHouse = pins.filter(function (it) {
+          return it.offer.type === window.data.housingType.value;
+        });
+        var takeNumber = sameTypeHouse.length > MAX_SIMILAR_PIN ? MAX_SIMILAR_PIN : sameTypeHouse.length;
+        // window.data.similarListElement.innerHTML = '';
+
+        if (window.data.housingType.value === 'any') {
+          for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
+            fragment.appendChild(window.map.renderMarks(pins[i]));
+          }
+        } else {
+          for (var j = 0; j < takeNumber; j++) {
+            fragment.appendChild(window.map.renderMarks(sameTypeHouse[j]));
+          }
+        }
+        window.data.similarListElement.appendChild(fragment);
+      };
+      var hideCard = function () {
+        var hiddenCards = document.querySelector('.containerCard');
+
+        for (var s = 0; s < mapPin.length; s++) {
+          if (mapPin[s].className === 'map__pin usual') {
+            mapPin[s].classList.add('hidden');
+          }
+        }
+        hiddenCards.classList.add('hidden');
+        successSameTypeHandler();
+      };
+      successSameTypeHandler();
+      window.data.housingType.addEventListener('change', hideCard);
     },
+
     errorHandler: function (errorMessage) {
       var node = document.createElement('div');
       node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: white; color: red';
