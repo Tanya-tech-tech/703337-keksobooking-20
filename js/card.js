@@ -3,12 +3,8 @@
 (function () {
   var cardElement = window.data.similarCardTemplate.cloneNode(true);
 
-  var getAllAds = function () {
-    var offer = [];
-    for (var i = 0; i < 8; i++) {
-      offer.push(window.pin.createPin());
-    }
-    return offer;
+  window.card = {
+    cardElement: cardElement
   };
 
   var typeOfHouse = function (card, element) {
@@ -36,10 +32,6 @@
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
-  var openPopup = function () {
-    window.util.userDialog.classList.remove('hidden');
-    document.addEventListener('keydown', onPopupEscPress);
-  };
 
   var createCard = function (card) {
     var type = cardElement.querySelector('h4');
@@ -53,7 +45,6 @@
     };
 
     popupClose.addEventListener('click', closePopup);
-    popupClose.addEventListener('keydown', onPopupEscPress);
     document.addEventListener('keydown', onPopupEscPress);
 
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
@@ -121,17 +112,16 @@
           image.height = '40';
           containerPhoto.insertAdjacentElement('afterBegin', image);
         }
-      }  else if (array.length === 1) {
+      } else if (array.length === 1) {
         element.src = array[0];
-      };
+      }
     };
 
     setPhotos(card.offer.photos, popupPhoto);
 
-    if (cardElement.className==='map__card popup hidden') {
-      cardElement.classList.remove('hidden')
+    if (cardElement.className === 'map__card popup hidden') {
+      cardElement.classList.remove('hidden');
     }
-    console.log(cardElement)
     return cardElement;
   };
 
@@ -140,7 +130,7 @@
       var fragment = document.createElement('div');
       fragment.className = 'containerCard';
       fragment.appendChild(createCard(element));
-      //element.classList.remove('hidden')
+
       return fragment;
     }
   };
