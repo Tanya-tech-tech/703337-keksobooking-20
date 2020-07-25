@@ -39,6 +39,8 @@
     .content
     .querySelector('.popup');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
+  var generalArray = [];
+  var sameTypeHouseForCard = [];
 
   window.data = {
     CHECKIN: CHECKIN,
@@ -71,6 +73,8 @@
     similarCardTemplate: similarCardTemplate,
     mapFiltersContainer: mapFiltersContainer,
     housingType: housingType,
+    generalArray: generalArray,
+    sameTypeHouseForCard: sameTypeHouseForCard,
 
     activationMap: function (evt) {
       if (evt.button === 0) {
@@ -82,6 +86,23 @@
       if (evt.key === 'Enter') {
         window.form.openMap();
       }
+    },
+
+    onPopupEscPress: function (evt) {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        closePopup();
+      }
+    },
+
+    closePopup: function () {
+      window.util.cardElement.classList.add('hidden');
+      document.removeEventListener('keydown', onPopupEscPress);
+    },
+
+    openPopup: function () {
+      window.util.userDialog.classList.remove('hidden');
+      document.addEventListener('keydown', onPopupEscPress);
     },
 
     anableItem: function (controls) {
@@ -98,35 +119,42 @@
 
     successHandler: function (pins) {
       var fragment = document.createDocumentFragment();
+
       var successSameTypeHandler = function () {
         var sameTypeHouse = pins.filter(function (it) {
           return it.offer.type === window.data.housingType.value;
         });
         var takeNumber = sameTypeHouse.length > MAX_SIMILAR_PIN ? MAX_SIMILAR_PIN : sameTypeHouse.length;
-        // window.data.similarListElement.innerHTML = '';
 
         if (window.data.housingType.value === 'any') {
           for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
             fragment.appendChild(window.map.renderMarks(pins[i]));
+            generalArray.push(pins[i]);
           }
         } else {
           for (var j = 0; j < takeNumber; j++) {
             fragment.appendChild(window.map.renderMarks(sameTypeHouse[j]));
+            sameTypeHouseForCard.push(sameTypeHouse[j]);
           }
-        }
+        };
+
         window.data.similarListElement.appendChild(fragment);
+        window.pinClick.pinClickHandler();
       };
+
       var hideCard = function () {
         var hiddenCards = document.querySelector('.containerCard');
-
-        for (var s = 0; s < mapPin.length; s++) {
-          if (mapPin[s].className === 'map__pin usual') {
-            mapPin[s].classList.add('hidden');
+        for (var i = 0; i < mapPin.length; i++) {
+          if (mapPin[i].className === 'map__pin usual') {
+            mapPin[i].classList.add('hidden');
           }
+        };
+        if (hiddenCards) {
+          hiddenCards.remove()//classList.add('hidden');
         }
-        hiddenCards.classList.add('hidden');
         successSameTypeHandler();
       };
+
       successSameTypeHandler();
       window.data.housingType.addEventListener('change', hideCard);
     },
