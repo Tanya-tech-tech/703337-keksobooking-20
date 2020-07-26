@@ -19,11 +19,14 @@
   var setupAddress = form.querySelector('#address');
   var setupRoomNumber = form.querySelector('#room_number');
   var setupCapacity = form.querySelector('#capacity');
+  var setupTimeIn = form.querySelector('#timein');
+  var setupTimeOut = form.querySelector('#timeout');
   var map = document.querySelector('.map');
   var controlsForm = form.querySelectorAll('input, select, textarea');
   var filters = document.querySelector('.map__filters').querySelectorAll('input, select, textarea');
   var optionsRoomQuantity = setupRoomNumber.querySelectorAll('option');
   var optionsCapacity = setupCapacity.querySelectorAll('option');
+  var optionsTimeOut = setupTimeOut.querySelectorAll('option');
   var pinMainWidth = setupActiveMap.offsetWidth;
   var pinMainHeightNotActive = setupActiveMap.offsetHeight;
   var pinMainHeightActive = setupActiveMap.offsetHeight + 22;// 22 - размер псевдоэлемента after
@@ -60,11 +63,14 @@
     setupAddress: setupAddress,
     setupRoomNumber: setupRoomNumber,
     setupCapacity: setupCapacity,
+    setupTimeIn: setupTimeIn,
+    setupTimeOut: setupTimeOut,
     map: map,
     controlsForm: controlsForm,
     filters: filters,
     optionsRoomQuantity: optionsRoomQuantity,
     optionsCapacity: optionsCapacity,
+    optionsTimeOut,
     pinMainWidth: pinMainWidth,
     pinMainHeightNotActive: pinMainHeightNotActive,
     pinMainHeightActive: pinMainHeightActive,
