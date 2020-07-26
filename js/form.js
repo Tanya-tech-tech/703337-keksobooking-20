@@ -35,10 +35,7 @@
       window.data.setupTimeIn.addEventListener('change', function () {
         for (var i = 0; i < window.data.optionsTimeOut.length; i++) {
           if (window.data.setupTimeIn.value === window.data.optionsTimeOut[i].value) {
-            window.data.optionsTimeOut[i].disabled = false;
-          } else {
-            window.data.optionsTimeOut[i].disabled = true;
-            window.data.optionsTimeOut[i].selected = false;
+            window.data.optionsTimeOut[i].selected = true;
           }
         }
       });
