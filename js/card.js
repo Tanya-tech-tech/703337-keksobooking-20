@@ -1,13 +1,10 @@
 'use strict';
 // модуль, который отвечает за создание карточки объявлений;
 (function () {
+  var cardElement = window.data.similarCardTemplate.cloneNode(true);
 
-  var getAllAds = function () {
-    var offer = [];
-    for (var i = 0; i < 8; i++) {
-      offer.push(window.pin.createPin());
-    }
-    return offer;
+  window.card = {
+    cardElement: cardElement
   };
 
   var typeOfHouse = function (card, element) {
@@ -23,16 +20,32 @@
     return element.textContent;
   };
 
+  var onPopupEscPress = function (evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      closePopup();
+    }
+  };
+
+  var closePopup = function () {
+    cardElement.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+
   var createCard = function (card) {
-    var cardElement = window.data.similarCardTemplate.cloneNode(true);
     var type = cardElement.querySelector('h4');
     var popupFeatures = cardElement.querySelector('ul');
+    var popupClose = cardElement.querySelector('.popup__close');
 
     var blockHidden = function (element1, block) {
       if (element1 === undefined) {
         block.classList.add('hidden');
       }
     };
+
+    popupClose.addEventListener('click', closePopup);
+    document.addEventListener('keydown', onPopupEscPress);
 
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
     blockHidden(card.author.avatar, cardElement.querySelector('.popup__avatar'));
@@ -85,43 +98,39 @@
     cardElement.querySelector('.popup__description').textContent = card.offer.description;
     blockHidden(card.offer.description, cardElement.querySelector('.popup__description'));
 
+    var popupPhoto = cardElement.querySelector('.popup__photos').querySelector('.popup__photo');
     var setPhotos = function (array, element) {
       var containerPhoto = cardElement.querySelector('.popup__photos');
-      var popupPhoto = cardElement.querySelector('.popup__photo');
-
-      for (var i = 0; i < array.length; i++) {
-        if (array.length === 1 && array[i] === undefined) {
-          containerPhoto.classList.add('hidden');
-        } else if (array.length > 1) {
+      if (array.length === 1 && array[0] === undefined) {
+        containerPhoto.classList.add('hidden');
+      } else if (array.length > 1) {
+        for (var i = 0; i < array.length; i++) {
           var image = document.createElement('img');
-          popupPhoto.classList.add('hidden');
+          element.classList.add('hidden');
           image.src = array[i];
           image.width = '45';
           image.height = '40';
-
           containerPhoto.insertAdjacentElement('afterBegin', image);
-
-        } else if (array.length === 1) {
-          element.src = array[i];
         }
+      } else if (array.length === 1) {
+        element.src = array[0];
       }
     };
 
-    var popupPhotos = cardElement.querySelector('.popup__photos').querySelector('img');
+    setPhotos(card.offer.photos, popupPhoto);
 
-    setPhotos(card.offer.photos, popupPhotos);
-
+    if (cardElement.className === 'map__card popup hidden') {
+      cardElement.classList.remove('hidden');
+    }
     return cardElement;
   };
 
   window.card = {
-
-    renderCards: function () {
-      var pinsArray = getAllAds();
-      var index = 0;
+    renderCards: function (element) {
       var fragment = document.createElement('div');
       fragment.className = 'containerCard';
-      fragment.appendChild(createCard(pinsArray[index]));
+      fragment.appendChild(createCard(element));
+
       return fragment;
     }
   };

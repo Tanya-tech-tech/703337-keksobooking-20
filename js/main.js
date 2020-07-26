@@ -41,7 +41,7 @@
       filters[i].disabled = true;
     }
   };
-  window.data.mapFiltersContainer.insertAdjacentElement('beforeBegin', window.card.renderCards());
+
   disableItem(window.data.controlsForm);
   disableMapFilters(window.data.filters);
 

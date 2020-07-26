@@ -31,14 +31,16 @@
   var housingType = document.getElementById('housing-type');
   var mapPin = similarListElement.children;
 
-
   var similarMarkTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
   var similarCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
+  var cardElement = similarCardTemplate.cloneNode(true);
   var mapFiltersContainer = document.querySelector('.map__filters-container');
+  window.generalArray = [];
+  var sameTypeHouseForCard = [];
 
   window.data = {
     CHECKIN: CHECKIN,
@@ -72,6 +74,8 @@
     mapFiltersContainer: mapFiltersContainer,
     housingType: housingType,
 
+    sameTypeHouseForCard: sameTypeHouseForCard,
+
     activationMap: function (evt) {
       if (evt.button === 0) {
         window.form.openMap();
@@ -82,6 +86,11 @@
       if (evt.key === 'Enter') {
         window.form.openMap();
       }
+    },
+
+    closePopup: function () {
+      cardElement.classList.add('hidden');
+      document.removeEventListener('keydown', window.data.onPopupEscPress);
     },
 
     anableItem: function (controls) {
@@ -98,12 +107,12 @@
 
     successHandler: function (pins) {
       var fragment = document.createDocumentFragment();
+      window.generalArray = pins;
       var successSameTypeHandler = function () {
         var sameTypeHouse = pins.filter(function (it) {
           return it.offer.type === window.data.housingType.value;
         });
         var takeNumber = sameTypeHouse.length > MAX_SIMILAR_PIN ? MAX_SIMILAR_PIN : sameTypeHouse.length;
-        // window.data.similarListElement.innerHTML = '';
 
         if (window.data.housingType.value === 'any') {
           for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
@@ -112,21 +121,27 @@
         } else {
           for (var j = 0; j < takeNumber; j++) {
             fragment.appendChild(window.map.renderMarks(sameTypeHouse[j]));
+            sameTypeHouseForCard.push(sameTypeHouse[j]);
           }
         }
+
         window.data.similarListElement.appendChild(fragment);
+        window.pinClick.pinClickHandler();
       };
+
       var hideCard = function () {
         var hiddenCards = document.querySelector('.containerCard');
-
-        for (var s = 0; s < mapPin.length; s++) {
-          if (mapPin[s].className === 'map__pin usual') {
-            mapPin[s].classList.add('hidden');
+        for (var i = 0; i < mapPin.length; i++) {
+          if (mapPin[i].className === 'map__pin usual') {
+            mapPin[i].classList.add('hidden');
           }
         }
-        hiddenCards.classList.add('hidden');
+        if (hiddenCards) {
+          hiddenCards.remove();
+        }
         successSameTypeHandler();
       };
+
       successSameTypeHandler();
       window.data.housingType.addEventListener('change', hideCard);
     },

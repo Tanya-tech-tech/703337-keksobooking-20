@@ -1,0 +1,51 @@
+'use strict';
+(function () {
+
+  var openCardHandler = function (evt) {
+    var mapPins = window.data.similarListElement.querySelectorAll('.usual');
+    var containerCard = document.querySelector('.containerCard');
+
+    if (containerCard) {
+      containerCard.remove();
+    }
+
+    for (var h = 0; h < mapPins.length; h++) {
+      if (mapPins[h].className === 'map__pin usual map__pin--active') {
+        mapPins[h].classList.remove('map__pin--active');
+      }
+    }
+
+    if (evt.target.parentNode.className === 'map__pin usual') {
+      evt.target.parentNode.classList.add('map__pin--active');
+    } else if (evt.target.className === 'map__pin usual') {
+      evt.target.classList.add('map__pin--active');
+    }
+
+    if (evt.target.tagName === 'BUTTON') {
+      for (var i = 0; i < window.generalArray.length; i++) {
+        if (evt.target.childNodes[0].alt === window.generalArray[i].offer.title) {
+          window.data.mapFiltersContainer.insertAdjacentElement('beforeBegin', window.card.renderCards(window.generalArray[i]));
+        }
+      }
+    }
+
+    for (var s = 0; s < window.generalArray.length; s++) {
+      if (window.generalArray[s].offer.title === evt.target.alt) {
+        window.data.mapFiltersContainer.insertAdjacentElement('beforeBegin', window.card.renderCards(window.generalArray[s]));
+      }
+    }
+  };
+
+  window.pinClick = {
+    pinClickHandler: function () {
+      window.data.similarListElement.addEventListener('keydown', function (evt) {
+        if (evt.key === 'Enter') {
+          openCardHandler();
+        }
+      });
+
+      window.data.similarListElement.addEventListener('click', openCardHandler);
+    }
+  };
+
+})();
