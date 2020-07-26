@@ -70,7 +70,7 @@
     filters: filters,
     optionsRoomQuantity: optionsRoomQuantity,
     optionsCapacity: optionsCapacity,
-    optionsTimeOut,
+    optionsTimeOut: optionsTimeOut,
     pinMainWidth: pinMainWidth,
     pinMainHeightNotActive: pinMainHeightNotActive,
     pinMainHeightActive: pinMainHeightActive,

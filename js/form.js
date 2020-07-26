@@ -34,7 +34,6 @@
       });
       window.data.setupTimeIn.addEventListener('change', function () {
         for (var i = 0; i < window.data.optionsTimeOut.length; i++) {
-          //console.log(window.data.setupTimeOut[i].value)
           if (window.data.setupTimeIn.value === window.data.optionsTimeOut[i].value) {
             window.data.optionsTimeOut[i].disabled = false;
           } else {
