@@ -39,6 +39,13 @@
           }
         }
       });
+      window.data.setupTimeOut.addEventListener('change', function () {
+        for (var i = 0; i < window.data.optionsTimeIn.length; i++) {
+          if (window.data.setupTimeOut.value === window.data.optionsTimeIn[i].value) {
+            window.data.optionsTimeIn[i].selected = true;
+          }
+        }
+      });
     }
   };
 

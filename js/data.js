@@ -27,6 +27,7 @@
   var optionsRoomQuantity = setupRoomNumber.querySelectorAll('option');
   var optionsCapacity = setupCapacity.querySelectorAll('option');
   var optionsTimeOut = setupTimeOut.querySelectorAll('option');
+  var optionsTimeIn = setupTimeIn.querySelectorAll('option');
   var pinMainWidth = setupActiveMap.offsetWidth;
   var pinMainHeightNotActive = setupActiveMap.offsetHeight;
   var pinMainHeightActive = setupActiveMap.offsetHeight + 22;// 22 - размер псевдоэлемента after
@@ -71,6 +72,7 @@
     optionsRoomQuantity: optionsRoomQuantity,
     optionsCapacity: optionsCapacity,
     optionsTimeOut: optionsTimeOut,
+    optionsTimeIn: optionsTimeIn,
     pinMainWidth: pinMainWidth,
     pinMainHeightNotActive: pinMainHeightNotActive,
     pinMainHeightActive: pinMainHeightActive,
