@@ -6,7 +6,8 @@
   window.form = {
     openMap: function () {
       window.data.map.classList.remove('map--faded');
-      window.load(window.data.successHandler, window.data.errorHandler);
+      window.data.form.classList.remove('ad-form--disabled');
+      window.backend.load(window.data.successHandler, window.data.errorHandler);
 
       window.data.anableItem(window.data.controlsForm);
       window.data.anableMapFilters(window.data.filters);

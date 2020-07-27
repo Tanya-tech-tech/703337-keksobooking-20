@@ -61,7 +61,7 @@ fieldset {
 
 /* Карта с объявлениями
    ========================================================================== */
-.containerCard {border: 15px solid red;}
+
 .promo {
   position: absolute;
   z-index: 1;
