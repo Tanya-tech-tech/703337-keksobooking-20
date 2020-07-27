@@ -32,6 +32,20 @@
           }
         }
       });
+      window.data.setupTimeIn.addEventListener('change', function () {
+        for (var i = 0; i < window.data.optionsTimeOut.length; i++) {
+          if (window.data.setupTimeIn.value === window.data.optionsTimeOut[i].value) {
+            window.data.optionsTimeOut[i].selected = true;
+          }
+        }
+      });
+      window.data.setupTimeOut.addEventListener('change', function () {
+        for (var i = 0; i < window.data.optionsTimeIn.length; i++) {
+          if (window.data.setupTimeOut.value === window.data.optionsTimeIn[i].value) {
+            window.data.optionsTimeIn[i].selected = true;
+          }
+        }
+      });
     }
   };
 
