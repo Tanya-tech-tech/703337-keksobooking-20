@@ -99,25 +99,26 @@
     blockHidden(card.offer.description, cardElement.querySelector('.popup__description'));
 
     var popupPhoto = cardElement.querySelector('.popup__photos').querySelector('.popup__photo');
-    var setPhotos = function (array, element) {
+    var setPhotos = function (array) {
       var containerPhoto = cardElement.querySelector('.popup__photos');
-      if (array.length === 1 && array[0] === undefined) {
+      containerPhoto.innerHTML = '';
+      if (array.length === 1 && array[0] === undefined || array === undefined) {
         containerPhoto.classList.add('hidden');
-      } else if (array.length > 1) {
+      } else if (array.length >= 1) {
         for (var i = 0; i < array.length; i++) {
           var image = document.createElement('img');
-          element.classList.add('hidden');
+          //element.classList.add('hidden');
           image.src = array[i];
           image.width = '45';
           image.height = '40';
           containerPhoto.insertAdjacentElement('afterBegin', image);
         }
-      } else if (array.length === 1) {
+      } /*else if (array.length === 1) {
         element.src = array[0];
-      }
+      }*/
     };
 
-    setPhotos(card.offer.photos, popupPhoto);
+    setPhotos(card.offer.photos);
 
     if (cardElement.className === 'map__card popup hidden') {
       cardElement.classList.remove('hidden');

@@ -68,8 +68,8 @@
     renderMarks: function (mark) {
       var adEl = window.data.similarMarkTemplate.cloneNode(true);
       adEl.classList.add('usual');
-      adEl.style.left = mark.location.x + 'px';
-      adEl.style.top = mark.location.y + 'px';
+      adEl.style.left = mark.location.x  - window.data.PIN_ORDINARY_WIDTH / 2 + 'px';
+      adEl.style.top = mark.location.y  - window.data.PIN_ORDINARY_HEIGHT + 'px';
       adEl.querySelector('img').src = mark.author.avatar;
       adEl.querySelector('img').alt = mark.offer.title;
       return adEl;
@@ -111,10 +111,11 @@
     },
     getPinMainCoordinate: function () {
       var style = window.data.setupActiveMap.style;
-      return parseInt(style.left, 10) + ', '
-      + parseInt(style.top, 10);
+      return Math.round(parseInt(style.left, 10) + window.data.pinMainWidth / 2) + ', '
+      + (parseInt(style.top, 10) + window.data.pinMainHeightActive);
     }
   };
 
 })();
+
 

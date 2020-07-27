@@ -6,6 +6,10 @@
   var FACILITIES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
   var NUMBER_PHOTO = [1, 2, 3, 4, 5, 6, 7, 8];
+  var BORDER_Y_MIN = 130;
+  var BORDER_Y_MAX = 630;
+  var PIN_ORDINARY_WIDTH = 50;
+  var PIN_ORDINARY_HEIGHT = 70;
 
   var QUANTITY_ROOMS = 4;
   var PRICE_PER_DAY = 6000;
@@ -53,6 +57,10 @@
     FACILITIES: FACILITIES,
     PHOTOS: PHOTOS,
     NUMBER_PHOTO: NUMBER_PHOTO,
+    BORDER_Y_MIN: BORDER_Y_MIN,
+    BORDER_Y_MAX: BORDER_Y_MAX,
+    PIN_ORDINARY_WIDTH: PIN_ORDINARY_WIDTH,
+    PIN_ORDINARY_HEIGHT,
     QUANTITY_ROOMS: QUANTITY_ROOMS,
     PRICE_PER_DAY: PRICE_PER_DAY,
     QUANTITY_GUESTS: QUANTITY_GUESTS,
@@ -116,6 +124,7 @@
     successHandler: function (pins) {
       var fragment = document.createDocumentFragment();
       window.generalArray = pins;
+
       var successSameTypeHandler = function () {
         var sameTypeHouse = pins.filter(function (it) {
           return it.offer.type === window.data.housingType.value;
@@ -165,6 +174,15 @@
       node.style.height = '150px';
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
+    },
+
+    submitHandler: function (evt) {
+      evt.preventDefault();
+      window.backend.save(new FormData(window.data.setupForm),
+        function () {
+          window.util.userDialog.classList.add('hidden');
+        },
+        window.render.errorHandler);
     }
   };
 
