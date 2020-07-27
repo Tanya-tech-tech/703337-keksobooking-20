@@ -22,13 +22,13 @@
       };
 
       if (window.data.setupActiveMap.offsetTop <= window.data.BORDER_Y_MIN - window.data.pinMainHeightActive) {
-        window.data.setupActiveMap.style.top = Math.round(window.data.BORDER_Y_MIN - window.data.pinMainHeightActive) + 'px'
+        window.data.setupActiveMap.style.top = Math.round(window.data.BORDER_Y_MIN - window.data.pinMainHeightActive) + 'px';
       } else if (window.data.setupActiveMap.offsetLeft <= 0) {
-        window.data.setupActiveMap.style.left = Math.round(0 - (window.data.pinMainWidth / 2)) + 'px'
+        window.data.setupActiveMap.style.left = Math.round(0 - (window.data.pinMainWidth / 2)) + 'px';
       } else if (window.data.setupActiveMap.offsetLeft >= window.data.randomWidth - window.data.pinMainWidth / 2) {
         window.data.setupActiveMap.style.left = Math.round(window.data.randomWidth - (window.data.pinMainWidth / 2)) + 'px';
       } else if (window.data.setupActiveMap.offsetTop >= window.data.BORDER_Y_MAX - window.data.pinMainHeightActive) {
-        window.data.setupActiveMap.style.top = Math.round(window.data.BORDER_Y_MAX - window.data.pinMainHeightActive) + 'px'
+        window.data.setupActiveMap.style.top = Math.round(window.data.BORDER_Y_MAX - window.data.pinMainHeightActive) + 'px';
       }
 
       window.data.setupActiveMap.style.top = (window.data.setupActiveMap.offsetTop - shift.y) + 'px';
@@ -45,7 +45,7 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-    });
+  });
 
 })();
 

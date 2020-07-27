@@ -60,7 +60,7 @@
     BORDER_Y_MIN: BORDER_Y_MIN,
     BORDER_Y_MAX: BORDER_Y_MAX,
     PIN_ORDINARY_WIDTH: PIN_ORDINARY_WIDTH,
-    PIN_ORDINARY_HEIGHT,
+    PIN_ORDINARY_HEIGHT: PIN_ORDINARY_HEIGHT,
     QUANTITY_ROOMS: QUANTITY_ROOMS,
     PRICE_PER_DAY: PRICE_PER_DAY,
     QUANTITY_GUESTS: QUANTITY_GUESTS,
@@ -179,10 +179,10 @@
     submitHandler: function (evt) {
       evt.preventDefault();
       window.backend.save(new FormData(window.data.setupForm),
-        function () {
-          window.util.userDialog.classList.add('hidden');
-        },
-        window.render.errorHandler);
+          function () {
+            window.util.userDialog.classList.add('hidden');
+          },
+          window.render.errorHandler);
     }
   };
 
