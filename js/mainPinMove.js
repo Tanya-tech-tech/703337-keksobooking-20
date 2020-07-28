@@ -26,13 +26,13 @@
       };
 
       if (map.offsetTop <= common.BORDER_Y_MIN - common.pinMainHeightActive) {
-        style.top = Math.round(common.BORDER_Y_MIN - common.pinMainHeightActive) + 'px'
+        style.top = Math.round(common.BORDER_Y_MIN - common.pinMainHeightActive) + 'px';
       } else if (map.offsetLeft <= 0) {
-        style.left = Math.round(0 - (common.pinMainWidth / 2)) + 'px'
+        style.left = Math.round(0 - (common.pinMainWidth / 2)) + 'px';
       } else if (map.offsetLeft >= common.randomWidth - common.pinMainWidth / 2) {
         style.left = Math.round(common.randomWidth - (common.pinMainWidth / 2)) + 'px';
       } else if (map.offsetTop >= common.BORDER_Y_MAX - common.pinMainHeightActive) {
-        style.top = Math.round(common.BORDER_Y_MAX - common.pinMainHeightActive) + 'px'
+        style.top = Math.round(common.BORDER_Y_MAX - common.pinMainHeightActive) + 'px';
       }
 
       style.top = (map.offsetTop - shift.y) + 'px';
@@ -49,7 +49,7 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-    });
+  });
 
 })();
 

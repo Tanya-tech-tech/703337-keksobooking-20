@@ -9,17 +9,17 @@
 
     if (containerCard) {
       containerCard.remove();
-    };
+    }
 
     for (var h = 0; h < mapPins.length; h++) {
       if (mapPins[h].className === 'map__pin usual map__pin--active') {
         mapPins[h].classList.remove('map__pin--active');
       }
-    };
+    }
 
     if (map.className === 'map__pin map__pin--main map__pin--active') {
       map.classList.remove('map__pin--active');
-    };
+    }
 
     if (evt.target.parentNode.className === 'map__pin usual') {
       evt.target.parentNode.classList.add('map__pin--active');
@@ -29,7 +29,7 @@
       evt.target.classList.add('map__pin--active');
     } else if (evt.target.parentNode.className === 'map__pin map__pin--main') {
       evt.target.parentNode.classList.add('map__pin--active');
-    };
+    }
 
     if (evt.target.tagName === 'BUTTON') {
       for (var i = 0; i < window.generalArray.length; i++) {

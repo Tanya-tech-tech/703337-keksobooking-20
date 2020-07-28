@@ -61,7 +61,7 @@
   var similarCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
-  var cardElement = similarCardTemplate.cloneNode(true);
+
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   window.generalArray = [];
   var sameTypeHouseForCard = [];
@@ -76,7 +76,7 @@
     BORDER_Y_MIN: BORDER_Y_MIN,
     BORDER_Y_MAX: BORDER_Y_MAX,
     PIN_ORDINARY_WIDTH: PIN_ORDINARY_WIDTH,
-    PIN_ORDINARY_HEIGHT,
+    PIN_ORDINARY_HEIGHT: PIN_ORDINARY_HEIGHT,
     QUANTITY_ROOMS: QUANTITY_ROOMS,
     PRICE_PER_DAY: PRICE_PER_DAY,
     QUANTITY_GUESTS: QUANTITY_GUESTS,
@@ -116,9 +116,9 @@
       }
     },
 
-    disableMapFilters: function (filters) {
-      for (var i = 0; i < filters.length; i++) {
-        filters[i].disabled = true;
+    disableMapFilters: function (filter) {
+      for (var i = 0; i < filter.length; i++) {
+        filter[i].disabled = true;
       }
     },
 
@@ -199,7 +199,7 @@
       };
 
       var hideCard = function () {
-        var hiddenCards = document.querySelector('.containerCard');
+
         for (var i = 0; i < mapPin.length; i++) {
           if (mapPin[i].className === 'map__pin usual') {
             mapPin[i].classList.add('hidden');
@@ -230,7 +230,7 @@
 
     errorPostHandler: function () {
       var messageError = errorMessageTemplate.cloneNode(true);
-      var errorButton = messageError.querySelector('.error__button')
+      var errorButton = messageError.querySelector('.error__button');
       var onPopupEscPress = function (evt) {
         if (evt.key === 'Escape') {
           evt.preventDefault();
@@ -246,15 +246,15 @@
       messageError.style = 'width: 60%; margin-left: 300px;';
       main.insertAdjacentElement('afterBegin', messageError);
 
-      document.addEventListener('click', function(evt) {
-        if(evt.target.className !== 'error') {
+      document.addEventListener('click', function (evt) {
+        if (evt.target.className !== 'error') {
           closePopup();
         }
       });
       document.addEventListener('keydown', onPopupEscPress);
-      errorButton.addEventListener('click', function() {
+      errorButton.addEventListener('click', function () {
         closePopup();
-      })
+      });
     },
 
     inactiveState: function () {
@@ -279,21 +279,21 @@
       evt.preventDefault();
 
       window.backend.save(new FormData(window.data.form),
-        function () {
-          message.style = 'width: 50%; margin-left: 400px;';
-          main.insertAdjacentElement('afterbegin', message);
-          window.data.inactiveState();
+          function () {
+            message.style = 'width: 50%; margin-left: 400px;';
+            main.insertAdjacentElement('afterbegin', message);
+            window.data.inactiveState();
 
-          document.addEventListener('click', function(evt) {
-            if(evt.target.className !== 'success') {
-              window.data.closePopup();
-            }
-          });
+            document.addEventListener('click', function (evtSuccess) {
+              if (evtSuccess.target.className !== 'success') {
+                window.data.closePopup();
+              }
+            });
 
-          document.addEventListener('keydown', window.data.onPopupEscPress);
-          window.data.inactiveState();
-        },
-        window.data.errorPostHandler
+            document.addEventListener('keydown', window.data.onPopupEscPress);
+            window.data.inactiveState();
+          },
+          window.data.errorPostHandler
       );
     }
   };

@@ -4,7 +4,6 @@
   var formReset = document.querySelector('.ad-form__reset');
   var common = window.data;
   var map = window.data.setupActiveMap;
-  var style = window.data.setupActiveMap.style;
 
   var checkCapacity = function (roomValue, roomQuantity) {
     for (var j = 0; j < common.optionsCapacity.length; j++) {
