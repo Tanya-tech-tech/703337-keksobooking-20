@@ -1,53 +1,42 @@
 'use strict';
 
 (function () {
+  var formReset = document.querySelector('.ad-form__reset');
+  var common = window.data;
+  var map = window.data.setupActiveMap;
+  var style = window.data.setupActiveMap.style;
 
   var checkCapacity = function (roomValue, roomQuantity) {
-    for (var j = 0; j < window.data.optionsCapacity.length; j++) {
-      if (window.data.optionsCapacity[j].value === roomValue) {
-        window.data.optionsCapacity[j].selected = roomQuantity;
+    for (var j = 0; j < common.optionsCapacity.length; j++) {
+      if (common.optionsCapacity[j].value === roomValue) {
+        common.optionsCapacity[j].selected = roomQuantity;
       } else {
-        window.data.optionsCapacity[j].disabled = true;
+        common.optionsCapacity[j].disabled = true;
       }
     }
   };
 
   var roomsForGuests = function () {
-    for (var i = 0; i < window.data.optionsRoomQuantity.length; i++) {
-      if (window.data.optionsRoomQuantity[i].value === '1') {
-        checkCapacity(window.data.optionsRoomQuantity[i].value, window.data.optionsRoomQuantity[i].selected);
+    for (var i = 0; i < common.optionsRoomQuantity.length; i++) {
+      if (common.optionsRoomQuantity[i].value === '1') {
+        checkCapacity(common.optionsRoomQuantity[i].value, common.optionsRoomQuantity[i].selected);
       }
     }
   };
 
   roomsForGuests();
 
-  var setPinMainInitialCoordinate = function (width, height) {
-    var style = window.data.setupActiveMap.style;
-    style.left = Math.round(parseInt(style.left, 10) - width / 2) + 'px';
-    style.top = Math.round(parseInt(style.top, 10) - height / 2) + 'px';
-  };
+  common.setPinMainInitialCoordinate(common.pinMainWidth, common.pinMainHeightNotActive);
 
-  setPinMainInitialCoordinate(window.data.pinMainWidth, window.data.pinMainHeightNotActive);
+  common.disableItem(common.controlsForm);
+  common.disableMapFilters(common.filters);
 
-  var disableItem = function (controls) {
-    for (var i = 0; i < controls.length; i++) {
-      controls[i].disabled = true;
-    }
-  };
+  map.addEventListener('mousedown', common.activationMap);
 
-  var disableMapFilters = function (filters) {
-    for (var i = 0; i < filters.length; i++) {
-      filters[i].disabled = true;
-    }
-  };
+  map.addEventListener('keydown', common.evtEnter);
 
-  disableItem(window.data.controlsForm);
-  disableMapFilters(window.data.filters);
-
-  window.data.setupActiveMap.addEventListener('mousedown', window.data.activationMap);
-
-  window.data.setupActiveMap.addEventListener('keydown', window.data.evtEnter);
+  common.form.addEventListener('submit', common.submitHandler);
+  formReset.addEventListener('click', common.inactiveState);
 
 })();
 

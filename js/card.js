@@ -98,6 +98,8 @@
     cardElement.querySelector('.popup__description').textContent = card.offer.description;
     blockHidden(card.offer.description, cardElement.querySelector('.popup__description'));
 
+    var popupPhoto = cardElement.querySelector('.popup__photos').querySelector('.popup__photo');
+
     var setPhotos = function (array) {
       var containerPhoto = cardElement.querySelector('.popup__photos');
       containerPhoto.innerHTML = '';
