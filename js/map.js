@@ -74,10 +74,10 @@
         adEl.querySelector('img').src = mark.author.avatar;
         adEl.querySelector('img').alt = mark.offer.title;
       } else {
-        adEl.style.left = mark.location.x  - window.data.PIN_ORDINARY_WIDTH / 2 + 'px';
-        adEl.style.top = mark.location.y  - window.data.PIN_ORDINARY_HEIGHT + 'px';
+        adEl.style.left = mark.location.x - window.data.PIN_ORDINARY_WIDTH / 2 + 'px';
+        adEl.style.top = mark.location.y - window.data.PIN_ORDINARY_HEIGHT + 'px';
         adEl.querySelector('img').src = mark.author.avatar;
-        adEl.querySelector('img').alt = "";
+        adEl.querySelector('img').alt = '';
         adEl.classList.add('hidden');
       }
 
