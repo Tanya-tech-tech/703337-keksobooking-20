@@ -39,7 +39,6 @@
   var pinMainHeightNotActive = setupActiveMap.offsetHeight;
   var pinMainHeightActive = setupActiveMap.offsetHeight + 22;// 22 - размер псевдоэлемента after
   var mapFilters = document.querySelector('.map__filters-container');
-  var mapFiltersFeature = mapFilters.querySelector('.map__features')
 
   var housingType = document.getElementById('housing-type');
   var housingPrice = document.getElementById('housing-price');
@@ -185,11 +184,11 @@
 
       var successSameTypeHandler = function () {
         var filterWifi = document.getElementById('filter-wifi');
-          var filterDishwasher = document.getElementById('filter-dishwasher');
-          var filterParking = document.getElementById('filter-parking');
-          var filterWasher = document.getElementById('filter-washer');
-          var filterElevator = document.getElementById('filter-elevator');
-          var filterConditioner = document.getElementById('filter-conditioner');
+        var filterDishwasher = document.getElementById('filter-dishwasher');
+        var filterParking = document.getElementById('filter-parking');
+        var filterWasher = document.getElementById('filter-washer');
+        var filterElevator = document.getElementById('filter-elevator');
+        var filterConditioner = document.getElementById('filter-conditioner');
 
         var getRank = function (pin) {
           var rank = 0;
@@ -197,7 +196,7 @@
             rank += 6;
           }
           if (housingType.value === 'any') {
-            rank += 1
+            rank += 1;
           }
           if (housingPrice.value === 'middle' && pin.offer.price >= 10000 && pin.offer.price <= 50000) {
             rank += 5;
@@ -209,22 +208,22 @@
             rank += 5;
           }
           if (housingPrice.value === 'any') {
-            rank += 1
+            rank += 1;
           }
           if (parseInt(housingRooms.value, 10) === pin.offer.rooms) {
             rank += 4;
           }
 
           if (housingRooms.value === 'any') {
-            rank += 1
+            rank += 1;
           }
           if (pin.offer.guests === parseInt(housingGuests.value, 10)) {
             rank += 3;
           }
           if (housingGuests.value === 'any') {
-            rank += 1
+            rank += 1;
           }
-          for (var i=0; i<pin.offer.features.length; i++) {
+          for (var i = 0; i < pin.offer.features.length; i++) {
             if (filterWifi.checked && pin.offer.features[i] === filterWifi.value) {
               rank += 2;
             } else if (filterDishwasher.checked && pin.offer.features[i] === filterDishwasher.value) {
@@ -261,29 +260,28 @@
             }
             return rankDiff;
           });
-          for (var y=0; y<window.generalArray.length; y++) {
-            console.log(window.generalArray[y].offer.features);
-          }
-          //console.log(generalArray);
+
           for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
             fragment.appendChild(window.map.renderMarks(window.generalArray[i]));
           }
 
           window.data.similarListElement.appendChild(fragment);
-        }
+        };
 
         updatePins();
         window.pinClick.pinClickHandler();
       };
 
       var hideCard = window.debounce(function () {
+        var containerCard = document.querySelector('.containerCard');
         for (var i = 0; i < mapPin.length; i++) {
           if (mapPin[i].className === 'map__pin usual') {
             mapPin[i].classList.add('hidden');
           }
         }
-        if (hiddenCards) {
-          hiddenCards.remove();
+
+        if (containerCard) {
+          containerCard.remove();
         }
         successSameTypeHandler();
       });
