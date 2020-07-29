@@ -39,7 +39,14 @@
   var pinMainHeightNotActive = setupActiveMap.offsetHeight;
   var pinMainHeightActive = setupActiveMap.offsetHeight + 22;// 22 - размер псевдоэлемента after
   var mapFilters = document.querySelector('.map__filters-container');
+
   var housingType = document.getElementById('housing-type');
+  var housingPrice = document.getElementById('housing-price');
+  var housingRooms = document.getElementById('housing-rooms');
+  var housingGuests = document.getElementById('housing-guests');
+  var housingFeatures = document.getElementById('housing-features');
+
+
   var main = document.querySelector('main');
   var body = document.querySelector('body');
   var mapPin = similarListElement.children;
@@ -64,7 +71,6 @@
 
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   window.generalArray = [];
-  var sameTypeHouseForCard = [];
 
   window.data = {
     CHECKIN: CHECKIN,
@@ -107,8 +113,6 @@
     mapFiltersContainer: mapFiltersContainer,
     housingType: housingType,
     main: main,
-
-    sameTypeHouseForCard: sameTypeHouseForCard,
 
     disableItem: function (controls) {
       for (var i = 0; i < controls.length; i++) {
@@ -177,42 +181,118 @@
     successHandler: function (pins) {
       var fragment = document.createDocumentFragment();
       window.generalArray = pins;
+
       var successSameTypeHandler = function () {
-        var sameTypeHouse = pins.filter(function (it) {
-          return it.offer.type === window.data.housingType.value;
-        });
-        var takeNumber = sameTypeHouse.length > MAX_SIMILAR_PIN ? MAX_SIMILAR_PIN : sameTypeHouse.length;
+        var filterWifi = document.getElementById('filter-wifi');
+        var filterDishwasher = document.getElementById('filter-dishwasher');
+        var filterParking = document.getElementById('filter-parking');
+        var filterWasher = document.getElementById('filter-washer');
+        var filterElevator = document.getElementById('filter-elevator');
+        var filterConditioner = document.getElementById('filter-conditioner');
 
-        if (window.data.housingType.value === 'any') {
+        var getRank = function (pin) {
+          var rank = 0;
+          if (pin.offer.type === housingType.value) {
+            rank += 6;
+          }
+          if (housingType.value === 'any') {
+            rank += 1;
+          }
+          if (housingPrice.value === 'middle' && pin.offer.price >= 10000 && pin.offer.price <= 50000) {
+            rank += 5;
+          }
+          if (housingPrice.value === 'low' && pin.offer.price < 10000) {
+            rank += 5;
+          }
+          if (housingPrice.value === 'high' && pin.offer.price > 50000) {
+            rank += 5;
+          }
+          if (housingPrice.value === 'any') {
+            rank += 1;
+          }
+          if (parseInt(housingRooms.value, 10) === pin.offer.rooms) {
+            rank += 4;
+          }
+
+          if (housingRooms.value === 'any') {
+            rank += 1;
+          }
+          if (pin.offer.guests === parseInt(housingGuests.value, 10)) {
+            rank += 3;
+          }
+          if (housingGuests.value === 'any') {
+            rank += 1;
+          }
+          for (var i = 0; i < pin.offer.features.length; i++) {
+            if (filterWifi.checked && pin.offer.features[i] === filterWifi.value) {
+              rank += 2;
+            } else if (filterDishwasher.checked && pin.offer.features[i] === filterDishwasher.value) {
+              rank += 2;
+            } else if (filterParking.checked && pin.offer.features[i] === filterParking.value) {
+              rank += 2;
+            } else if (filterWasher.checked && pin.offer.features[i] === filterWasher.value) {
+              rank += 2;
+            } else if (filterElevator.checked && pin.offer.features[i] === filterElevator.value) {
+              rank += 2;
+            } else if (filterConditioner.checked && pin.offer.features[i] === filterConditioner.value) {
+              rank += 2;
+            }
+          }
+
+          return rank;
+        };
+
+        var typeComparator = function (left, right) {
+          if (left > right) {
+            return 1;
+          } else if (left < right) {
+            return -1;
+          } else {
+            return 0;
+          }
+        };
+
+        var updatePins = function () {
+          window.generalArray.sort(function (left, right) {
+            var rankDiff = getRank(right) - getRank(left);
+            if (rankDiff === 0) {
+              rankDiff = typeComparator(left.offer.type, right.offer.type);
+            }
+            return rankDiff;
+          });
+
           for (var i = 0; i < MAX_SIMILAR_PIN; i++) {
-            fragment.appendChild(window.map.renderMarks(pins[i]));
+            fragment.appendChild(window.map.renderMarks(window.generalArray[i]));
           }
-        } else {
-          for (var j = 0; j < takeNumber; j++) {
-            fragment.appendChild(window.map.renderMarks(sameTypeHouse[j]));
-            sameTypeHouseForCard.push(sameTypeHouse[j]);
-          }
-        }
 
-        window.data.similarListElement.appendChild(fragment);
+          window.data.similarListElement.appendChild(fragment);
+        };
+
+        updatePins();
         window.pinClick.pinClickHandler();
       };
 
-      var hideCard = function () {
-
+      var hideCard = window.debounce(function () {
+        var containerCard = document.querySelector('.containerCard');
         for (var i = 0; i < mapPin.length; i++) {
           if (mapPin[i].className === 'map__pin usual') {
             mapPin[i].classList.add('hidden');
           }
         }
-        if (hiddenCards) {
-          hiddenCards.remove();
+
+        if (containerCard) {
+          containerCard.remove();
         }
         successSameTypeHandler();
-      };
+      });
 
       successSameTypeHandler();
-      window.data.housingType.addEventListener('change', hideCard);
+
+      housingType.addEventListener('change', hideCard);
+      housingPrice.addEventListener('change', hideCard);
+      housingRooms.addEventListener('change', hideCard);
+      housingGuests.addEventListener('change', hideCard);
+      housingFeatures.addEventListener('change', hideCard);
     },
 
     errorHandler: function (errorMessage) {
