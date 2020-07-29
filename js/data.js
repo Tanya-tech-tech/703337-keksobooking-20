@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var CHECKIN = ['12:00', '13:00', '14:00'];
   var CHECKOUT = ['12:00', '13:00', '14:00'];
@@ -16,6 +17,8 @@
   var QUANTITY_GUESTS = 10;
   var MAX_SIMILAR_PIN = 5;
 
+  var PinMainInitialX = 570;
+  var PinMainInitialY = 375;
   var similarListElement = document.querySelector('.map__pins');
   var setupActiveMap = similarListElement.querySelector('.map__pin--main');
   var randomWidth = similarListElement.offsetWidth;
@@ -37,15 +40,28 @@
   var pinMainHeightActive = setupActiveMap.offsetHeight + 22;// 22 - размер псевдоэлемента after
   var mapFilters = document.querySelector('.map__filters-container');
   var housingType = document.getElementById('housing-type');
+  var main = document.querySelector('main');
+  var body = document.querySelector('body');
   var mapPin = similarListElement.children;
+  var hiddenCards = document.querySelector('.containerCard');
 
   var similarMarkTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
+
+  var successMessageTemplate = document.querySelector('#success')
+    .content
+    .querySelector('.success');
+  var message = successMessageTemplate.cloneNode(true);
+
+  var errorMessageTemplate = document.querySelector('#error')
+    .content
+    .querySelector('.error');
+
   var similarCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
-  var cardElement = similarCardTemplate.cloneNode(true);
+
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   window.generalArray = [];
   var sameTypeHouseForCard = [];
@@ -87,10 +103,29 @@
     mapFilters: mapFilters,
     similarMarkTemplate: similarMarkTemplate,
     similarCardTemplate: similarCardTemplate,
+    successMessageTemplate: successMessageTemplate,
     mapFiltersContainer: mapFiltersContainer,
     housingType: housingType,
+    main: main,
 
     sameTypeHouseForCard: sameTypeHouseForCard,
+
+    disableItem: function (controls) {
+      for (var i = 0; i < controls.length; i++) {
+        controls[i].disabled = true;
+      }
+    },
+
+    disableMapFilters: function (filter) {
+      for (var i = 0; i < filter.length; i++) {
+        filter[i].disabled = true;
+      }
+    },
+
+    setPinMainInitialCoordinate: function (width, height) {
+      window.data.setupActiveMap.style.left = Math.round(parseInt(window.data.setupActiveMap.style.left, 10) - width / 2) + 'px';
+      window.data.setupActiveMap.style.top = Math.round(parseInt(window.data.setupActiveMap.style.top, 10) - height / 2) + 'px';
+    },
 
     activationMap: function (evt) {
       if (evt.button === 0) {
@@ -104,8 +139,15 @@
       }
     },
 
+    onPopupEscPress: function (evt) {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        window.data.closePopup();
+      }
+    },
+
     closePopup: function () {
-      cardElement.classList.add('hidden');
+      message.classList.add('hidden');
       document.removeEventListener('keydown', window.data.onPopupEscPress);
     },
 
@@ -121,10 +163,20 @@
       }
     },
 
+    removePins: function () {
+      for (var i = 0; i < mapPin.length; i++) {
+        if (mapPin[i].className === 'map__pin usual') {
+          mapPin[i].classList.add('hidden');
+        }
+      }
+      if (hiddenCards) {
+        hiddenCards.remove();
+      }
+    },
+
     successHandler: function (pins) {
       var fragment = document.createDocumentFragment();
       window.generalArray = pins;
-
       var successSameTypeHandler = function () {
         var sameTypeHouse = pins.filter(function (it) {
           return it.offer.type === window.data.housingType.value;
@@ -147,7 +199,7 @@
       };
 
       var hideCard = function () {
-        var hiddenCards = document.querySelector('.containerCard');
+
         for (var i = 0; i < mapPin.length; i++) {
           if (mapPin[i].className === 'map__pin usual') {
             mapPin[i].classList.add('hidden');
@@ -173,16 +225,76 @@
       node.style.fontSize = '40px';
       node.style.height = '150px';
       node.textContent = errorMessage;
-      document.body.insertAdjacentElement('afterbegin', node);
+      body.insertAdjacentElement('afterbegin', node);
+    },
+
+    errorPostHandler: function () {
+      var messageError = errorMessageTemplate.cloneNode(true);
+      var errorButton = messageError.querySelector('.error__button');
+      var onPopupEscPress = function (evt) {
+        if (evt.key === 'Escape') {
+          evt.preventDefault();
+          closePopup();
+        }
+      };
+
+      var closePopup = function () {
+        messageError.classList.add('hidden');
+        document.removeEventListener('keydown', onPopupEscPress);
+      };
+
+      messageError.style = 'width: 60%; margin-left: 300px;';
+      main.insertAdjacentElement('afterBegin', messageError);
+
+      document.addEventListener('click', function (evt) {
+        if (evt.target.className !== 'error') {
+          closePopup();
+        }
+      });
+      document.addEventListener('keydown', onPopupEscPress);
+      errorButton.addEventListener('click', function () {
+        closePopup();
+      });
+    },
+
+    inactiveState: function () {
+      window.data.map.classList.add('map--faded');
+      window.data.form.classList.add('ad-form--disabled');
+      window.data.form.reset();
+
+      window.data.removePins();
+
+      window.data.setPinMainInitialCoordinate(window.data.pinMainWidth, window.data.pinMainHeightNotActive);
+      window.data.setupActiveMap.style.left = PinMainInitialX + 'px';
+      window.data.setupActiveMap.style.top = PinMainInitialY + 'px';
+      window.data.setupAddress.value = window.map.getPinMainCoordinate();
+      window.data.disableItem(window.data.controlsForm);
+      window.data.disableMapFilters(window.data.filters);
+      window.data.setupActiveMap.addEventListener('mousedown', window.data.activationMap);
+      window.data.setupActiveMap.addEventListener('keydown', window.data.evtEnter);
+      window.data.form.addEventListener('submit', window.data.submitHandler);
     },
 
     submitHandler: function (evt) {
       evt.preventDefault();
-      window.backend.save(new FormData(window.data.setupForm),
+
+      window.backend.save(new FormData(window.data.form),
           function () {
-            window.util.userDialog.classList.add('hidden');
+            message.style = 'width: 50%; margin-left: 400px;';
+            main.insertAdjacentElement('afterbegin', message);
+            window.data.inactiveState();
+
+            document.addEventListener('click', function (evtSuccess) {
+              if (evtSuccess.target.className !== 'success') {
+                window.data.closePopup();
+              }
+            });
+
+            document.addEventListener('keydown', window.data.onPopupEscPress);
+            window.data.inactiveState();
           },
-          window.render.errorHandler);
+          window.data.errorPostHandler
+      );
     }
   };
 
