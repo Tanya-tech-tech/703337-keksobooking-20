@@ -101,7 +101,7 @@
     var setPhotos = function (array) {
       var containerPhoto = cardElement.querySelector('.popup__photos');
       containerPhoto.innerHTML = '';
-      if (array.length === 1 && array[0] === undefined || array === undefined) {
+      if (array.length === 1 && array[0] === undefined) {
         containerPhoto.classList.add('hidden');
       } else if (array.length >= 1) {
         for (var i = 0; i < array.length; i++) {
@@ -111,6 +111,8 @@
           image.height = '40';
           containerPhoto.insertAdjacentElement('afterBegin', image);
         }
+      } else if (array === undefined) {
+        containerPhoto.classList.add('hidden');
       }
     };
 
